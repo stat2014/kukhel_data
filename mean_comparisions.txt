@@ -1,0 +1,35 @@
+# example
+# Nitrogen content of red clover 
+ redclover<- data.frame (treatments = c("3DOk13", "3DOk4", "Composite", "3DOk7", "3DOk5", "3DOk1"), nitromeans = c(28.8, 24.0, 14.6, 19.9, 13.3, 18.7))
+ 
+ # Scheffes test 
+ ft = 5 #treatment degree of freedom = 
+ fe =  25 #error degree of freedom 
+  #Ftab - F value tabulated for (ft, fe) at alpha 
+  alpha = 0.05
+  alpha=0.01
+  Ftab <- qf(1-alpha, ft, fe)
+  err_ms = 11.79
+  r = 5
+ SSq = sqrt(ft*Ftab*2*(err_ms/r))
+ 
+# tukey w procedure 
+p= 6 # number of treatments 
+qtt <- qtukey(1-alpha, p, df =  fe)
+  #qalpha(p,fe)
+s.ybar = sqrt(err_ms/r) 
+w = qtt*s.ybar 
+# un-equal reps 
+sqrt((1/2)*((1/r1) + (1/r2)))
+# confidence interval - diff + w, diff - w
+
+
+# S-N-K test 
+# first test highest and lowest values, if not significantly different stop
+s.ybar = sqrt(err_ms/r) 
+p= 6 # number of treatments 
+qalpha =  qtukey(1-alpha, 6:2, df =fe) # qalpha(p,fe) 
+Wp = s.ybar * qalpha
+
+
+

@@ -1,0 +1,72 @@
+setwd("C:/Users/umesh.rosyara/Desktop/specdata/")
+directory= "specdata"
+pollutant= "nitrate"
+
+pollutantmean <- function(directory, pollutant, id = 1:332) {
+# get current working directory 
+mywd <- getwd()
+# change current working directory new directory called specdata 
+# within current current working directory  
+setwd(paste(mywd, directory, sep="/"))
+
+# creat list of files 
+all.files <- list.files( pattern="*.csv", full.names=TRUE)
+list.df <- lapply(all.files, read.csv)
+
+# calculate mean of the variable specified 
+mean.cal <- function(x){
+df <- list.df[[x]]
+meanx <- mean(df[,pollutant], na.rm = TRUE)
+}
+out <- sapply(id, mean.cal)
+return(out)
+}
+
+complete <- function(directory, id = 1:332) {
+# get current working directory 
+mywd <- getwd()
+# change current working directory new directory specified in directory 
+# within current current working directory  
+setwd(paste(mywd, directory, sep="/"))
+
+# creat list of files 
+all.files <- list.files( pattern="*.csv", full.names=TRUE)
+list.df <- lapply(all.files, read.csv)
+
+cf <- function(x){
+df1 <- list.df[[x]]
+comcase <- df1[complete.cases(df1),] # complete cases ??
+cs <- nrow(comcase)
+return(cs)
+}
+out <- sapply(id, cf)
+outdf <- data.frame (id=id, nobs=out)
+return(outdf)
+}
+
+corr <- function(directory, threshold = 0) {
+# get current working directory 
+mywd <- getwd()
+# change current working directory new directory called specdata 
+# within current current working directory  
+setwd(paste(mywd, directory, sep="/"))
+
+# creat list of files 
+all.files <- list.files( pattern="*.csv", full.names=TRUE)
+list.df <- lapply(all.files, read.csv)
+
+corl <- rep(NA,length(list.df)) 
+for (i in 1:length(list.df)){
+df1 <- list.df[[i]]
+comcase <- df1[complete.cases(df1),]
+n.cc <- nrow(comcase)
+if(n.cc < threshold){
+corl[i] <- NA
+} else {
+corl[i] <- cor(df1[,"sulfate"], df1[,"nitrate"], use = "complete")
+}
+}
+cor2 <- as.numeric (na.omit(corl))
+return(cor2)
+}
+
